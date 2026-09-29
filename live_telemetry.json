@@ -1,0 +1,49 @@
+{
+  "account_email": "alex.mohit@icloud.com",
+  "vin": "Unknown",
+  "nickname": "Lucid Air",
+  "vehicle_spec": {
+    "vin": "Unknown",
+    "nickname": "Lucid Air",
+    "model": "Air",
+    "trim": "Grand Touring",
+    "software_version": "Lucid UX 2.4.6"
+  },
+  "telemetry": {
+    "battery": {
+      "battery_level": 90,
+      "usable_capacity_kwh": 111.6,
+      "soc": 90
+    },
+    "range_estimated": 462,
+    "odometer": 18450,
+    "raw_state": {
+      "DESCRIPTOR": "<google._upb._message.Descriptor object at 0x00000217DF5B8BD0>",
+      "alarm": "status: ALARM_STATUS_ARMED\nmode: ALARM_MODE_ON\n",
+      "battery": "remaining_range: 334\ncharge_percent: 41.50000061839819\nkwhr: 42.669999046251178\ncapacity_kwhr: 102.91999769955873\nbattery_health: WARNING_OFF\nlow_charge_level: WARNING_OFF\ncritical_charge_level: WARNING_OFF\npreconditioning_status: BATTERY_PRECON_UNAVAILABLE\npreconditioning_time_remaining: 65535\nbattery_health_level: 96.000001430511475\nbmu_software_version_major: 4\nbmu_software_version_minor: 19\nbmu_software_version_micro: 11\nbattery_cell_type: BATTERY_CELL_TYPE_LG_M48\nbattery_pack_type: BATTERY_PACK_TYPE_AIR_22\nmax_cell_temp: 21.6000018119812\nmin_cell_temp: 20.700001798570156\n",
+      "body": "door_locks: LOCK_STATE_LOCKED\nfront_cargo: DOOR_STATE_CLOSED\nrear_cargo: DOOR_STATE_CLOSED\nfront_left_door: DOOR_STATE_CLOSED\nfront_right_door: DOOR_STATE_CLOSED\nrear_left_door: DOOR_STATE_CLOSED\nrear_right_door: DOOR_STATE_CLOSED\ncharge_port: DOOR_STATE_CLOSED\nwalkaway_lock: WALKAWAY_ACTIVE\naccess_type_status: ACCESS_REQUEST_PASSIVE\nkeyfob_battery_status: KEYFOB_BATTERY_STATUS_SUFFICIENT\nall_windows_position: ALL_WINDOW_POSITION_IDLE\nwindow_position {\n  left_front: WINDOW_POSITION_STATUS_FULLY_CLOSED\n  left_rear: WINDOW_POSITION_STATUS_FULLY_CLOSED\n  right_front: WINDOW_POSITION_STATUS_FULLY_CLOSED\n  right_rear: WINDOW_POSITION_STATUS_FULLY_CLOSED\n}\n",
+      "cabin": "interior_temp: 25.700001575052738\nexterior_temp: 19.300000883638859\n",
+      "charging": "charge_state: CHARGE_STATE_NOT_CONNECTED\nsession_minutes_remaining: 65535\ncharge_limit: 49960\ncable_lock: LOCK_STATE_LOCKED\ncharge_limit_percent: 90.000001341104507\ncharge_scheduled_time: 4095\nscheduled_charge: SCHEDULED_CHARGE_STATE_IDLE\nscheduled_charge_unavailable: SCHEDULED_CHARGE_UNAVAILABLE_NO_REQUEST\nport_power: 5.9604644775390625e-06\ndischarge_target_soe: 10\nactive_session_ac_current_limit: 40\nenergy_ac_current_limit: 80\nea_pnc_status: EA_PNC_STATUS_ENABLE\ncharging_session_restart_allowed: CHARGING_SESSION_RESTART_ALLOWED_STATUS_NOT_ALLOWED\n",
+      "chassis": "odometer_km: 75856.501130349934\nfront_left_tire_pressure_bar: 3.4500000514090061\nfront_right_tire_pressure_bar: 3.4500000514090061\nrear_left_tire_pressure_bar: 3.4250000510364771\nrear_right_tire_pressure_bar: 3.2500000484287739\nheadlights: LIGHT_ACTION_OFF\nhard_warn_left_front: WARNING_OFF\nhard_warn_left_rear: WARNING_OFF\nhard_warn_right_front: WARNING_OFF\nhard_warn_right_rear: WARNING_OFF\nsoft_warn_left_front: WARNING_OFF\nsoft_warn_left_rear: WARNING_OFF\nsoft_warn_right_front: WARNING_OFF\nsoft_warn_right_rear: WARNING_OFF\nsoftware_version: \"2.10.0\"\nsensor_defective_left_front: TIRE_PRESSURE_SENSOR_DEFECTIVE_OFF\nsensor_defective_left_rear: TIRE_PRESSURE_SENSOR_DEFECTIVE_OFF\nsensor_defective_right_front: TIRE_PRESSURE_SENSOR_DEFECTIVE_OFF\nsensor_defective_right_rear: TIRE_PRESSURE_SENSOR_DEFECTIVE_OFF\ntire_pressure_last_updated: 1790630525\n",
+      "cloud_connection": "1",
+      "drive_mode": "1",
+      "factory_reset_state": "0",
+      "fault_state": "mpb_fault_status: MPB_FAULT_STATUS_NORMAL\n",
+      "gear_position": "1",
+      "gps": "location {\n  latitude: 47.314478342359848\n  longitude: -122.57604378421286\n}\nelevation: 4280\nposition_time: 1727458149\nheading_precise: 133.10000198334455\n",
+      "hvac": "power: HVAC_OFF\ndefrost: DEFROST_OFF\nprecondition_status: HVAC_PRECONDITION_STATUS_NOT_ACTIVE_PRECONDITION\nkeep_climate_status: KEEP_CLIMATE_STATUS_INACTIVE\nkeep_climate_condition: KEEP_CLIMATE_CONDITION_IDLE\nmax_ac_status: MAX_AC_STATE_OFF\nseats {\n  driver_heat_backrest_zone1: SEAT_CLIMATE_MODE_OFF\n  driver_heat_backrest_zone3: SEAT_CLIMATE_MODE_OFF\n  driver_heat_cushion_zone2: SEAT_CLIMATE_MODE_OFF\n  driver_heat_cushion_zone4: SEAT_CLIMATE_MODE_OFF\n  driver_vent_backrest: SEAT_CLIMATE_MODE_OFF\n  driver_vent_cushion: SEAT_CLIMATE_MODE_OFF\n  front_passenger_heat_backrest_zone1: SEAT_CLIMATE_MODE_OFF\n  front_passenger_heat_backrest_zone3: SEAT_CLIMATE_MODE_OFF\n  front_passenger_heat_cushion_zone2: SEAT_CLIMATE_MODE_OFF\n  front_passenger_heat_cushion_zone4: SEAT_CLIMATE_MODE_OFF\n  front_passenger_vent_backrest: SEAT_CLIMATE_MODE_OFF\n  front_passenger_vent_cushion: SEAT_CLIMATE_MODE_OFF\n  rear_passenger_heat_left: SEAT_CLIMATE_MODE_OFF\n  rear_passenger_heat_center: SEAT_CLIMATE_MODE_OFF\n  rear_passenger_heat_right: SEAT_CLIMATE_MODE_OFF\n}\nsync_set: SYNC_SET_ON\nrear_window_heating_status: REAR_WINDOW_HEATING_STATUS_OFF\nsteering_heater: STEERING_HEATER_STATUS_OFF\nfront_left_set_temperature: 21.082677334547043\nhvac_limited: HVAC_LIMITED_OFF\n",
+      "keyless_driving": "2",
+      "last_updated_ms": "1790651118397",
+      "low_power_mode_status": "2",
+      "mobile_app_request": "charge_port_request: DOOR_STATE_OPEN\n",
+      "notifications": "powertrain_message: POWERTRAIN_MESSAGE_BLANK_NO_MESSAGE\npowertrain_notify_status: POWERTRAIN_NOTIFY_NONE\ncharging_general_status: GENERAL_CHARGE_DEFAULT\nbattery_charge_status: GENERAL_CHARGE_DEFAULT\n",
+      "power": "1",
+      "privacy_mode": "1",
+      "sentry_state": "",
+      "software_update": "version_available: \"0.0.0\"\nstate: UPDATE_SUCCESS_WITH_WARNINGS\ndownload_status: SOFTWARE_DOWNLOAD_STATUS_IDLE\ndownload_interface: SOFTWARE_DOWNLOAD_INTERFACE_IDLE\ntcu_download_status: TCU_SOFTWARE_DOWNLOAD_STATUS_DOWNLOAD_COMPLETE\n",
+      "tcu": "4",
+      "tcu_internet": "lte_type: LTE_TYPE_4G\nlte_status: INTERNET_CONNECTED\nwifi_status: INTERNET_DISCONNECTED\nlte_rssi: 22\n",
+      "trailer_state": ""
+    }
+  }
+}
