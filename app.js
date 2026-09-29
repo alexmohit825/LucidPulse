@@ -95,12 +95,60 @@ function generateFleetDataset() {
 const fleetData = generateFleetDataset();
 
 // Initialize on DOM Ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadLiveTelemetryIfAvailable();
   initDashboard();
   renderFleetScatterChart();
   renderStressChart();
   renderVampireChart();
 });
+
+// Check if live_telemetry.json exists on the local server
+async function loadLiveTelemetryIfAvailable() {
+  try {
+    const resp = await fetch('/live_telemetry.json');
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data && (data.telemetry || data.vehicle_spec)) {
+        console.log("Loaded live vehicle data from live_telemetry.json:", data);
+        
+        const spec = data.vehicle_spec || {};
+        const tel = data.telemetry || {};
+        const bms = tel.battery || tel.bms || {};
+        
+        // Populate state with real vehicle attributes
+        state.activeVehicle.vin = data.vin || spec.vin || state.activeVehicle.vin;
+        state.activeVehicle.trim = spec.trim || spec.model_variant || 'Grand Touring';
+        state.activeVehicle.odometer = tel.odometer || tel.mileage || 18450;
+        
+        if (bms.usable_capacity_kwh || bms.battery_capacity_kwh) {
+          state.activeVehicle.currentUsable = parseFloat((bms.usable_capacity_kwh || bms.battery_capacity_kwh).toFixed(1));
+          state.activeVehicle.soh = parseFloat(((state.activeVehicle.currentUsable / state.activeVehicle.factoryUsable) * 100).toFixed(1));
+        }
+
+        if (tel.range_estimated || tel.estimated_range) {
+          state.activeVehicle.estimatedRange = Math.round(tel.range_estimated || tel.estimated_range);
+        }
+
+        if (bms.battery_level || bms.soc) {
+          state.activeVehicle.currentSoc = Math.round(bms.battery_level || bms.soc);
+        }
+
+        // Update connection badge
+        const badge = document.getElementById('connectionBadge');
+        if (badge) {
+          badge.className = 'badge badge-live';
+          badge.innerHTML = `
+            <span class="badge-dot" style="background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></span>
+            <span>Live VIN: ${state.activeVehicle.vin.substring(0, 8)}... (Connected)</span>
+          `;
+        }
+      }
+    }
+  } catch (e) {
+    console.log("No live_telemetry.json found, using verified profile.", e);
+  }
+}
 
 // Update UI Values
 function initDashboard() {
