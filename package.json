@@ -1,0 +1,13 @@
+{
+  "name": "lucid-pulse",
+  "version": "1.0.0",
+  "description": "LucidPulse — Luxury Battery Health, Fleet Benchmarks & Fast-Charge Telemetry for Lucid Air",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy": "wrangler pages deploy ."
+  },
+  "keywords": ["lucid-air", "ev-battery-health", "telemetry", "bms", "lucidmotors"],
+  "author": "2026 A. Alex Mohit",
+  "license": "MIT"
+}

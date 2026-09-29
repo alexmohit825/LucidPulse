@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LucidPulse — Lucid Air Battery Health & Telemetry Analytics</title>
+  
+  <!-- Apple Touch & PWA Meta -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LucidPulse">
+  <meta name="theme-color" content="#07080a">
+  
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand-wrapper">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">LUCIDPULSE</div>
+          <div class="brand-subtitle">High-Voltage Battery Telemetry & Fleet Analytics</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div id="connectionBadge" class="badge badge-demo">
+          <span class="badge-dot" style="background: var(--accent-amber); box-shadow: 0 0 8px var(--accent-amber);"></span>
+          <span id="connectionText">Dr. Mohit Air GT (Verified)</span>
+        </div>
+        <button id="btnConnectApi" class="btn-luxury" onclick="openConnectModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+          </svg>
+          Lucid Cloud Connect
+        </button>
+      </div>
+    </header>
+
+    <!-- Vehicle Banner -->
+    <section class="vehicle-banner">
+      <div class="vehicle-info">
+        <div class="vehicle-thumb">
+          <svg viewBox="0 0 100 60">
+            <path d="M10,40 Q25,38 35,28 Q45,18 70,18 Q85,18 92,30 Q96,38 95,44 L5,44 Q5,40 10,40 Z" />
+            <circle cx="28" cy="44" r="8" fill="#111" stroke="#c5a059" stroke-width="2" />
+            <circle cx="78" cy="44" r="8" fill="#111" stroke="#c5a059" stroke-width="2" />
+          </svg>
+        </div>
+        <div>
+          <div class="vehicle-name" id="vehicleTrimTitle">2023 Lucid Air Grand Touring</div>
+          <div class="vehicle-meta">
+            <span id="vinDisplay">VIN: 55X...GT9825</span>
+            <span>•</span>
+            <span id="firmwareDisplay">Lucid UX 2.4.6</span>
+            <span>•</span>
+            <span>924V Dual-Motor Powertrain</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-pills">
+        <div class="quick-pill">
+          <div class="quick-pill-label">Usable Pack</div>
+          <div class="quick-pill-val gold" id="usableCapacityBanner">111.6 kWh</div>
+        </div>
+        <div class="quick-pill">
+          <div class="quick-pill-label">State of Health</div>
+          <div class="quick-pill-val green" id="sohBanner">97.0%</div>
+        </div>
+        <div class="quick-pill">
+          <div class="quick-pill-label">Current Range</div>
+          <div class="quick-pill-val cyan" id="rangeBanner">462 mi (90%)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top KPI Grid -->
+    <section class="kpi-grid">
+      <!-- KPI 1: Usable Pack Capacity -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Usable Capacity</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect><line x1="22" y1="11" x2="22" y2="13"></line></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiCapacity">111.6</span>
+          <span class="kpi-unit">kWh</span>
+        </div>
+        <div class="kpi-desc" id="kpiCapacityDesc">Original Factory: 115.0 kWh usable (118 kWh gross)</div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" id="kpiCapacityBar" style="width: 97.0%; background: linear-gradient(90deg, var(--accent-gold), var(--accent-green));"></div>
+        </div>
+      </div>
+
+      <!-- KPI 2: Battery State of Health -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">State of Health (SoH)</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiSoH">97.0</span>
+          <span class="kpi-unit">%</span>
+        </div>
+        <div class="kpi-desc" id="kpiSoHDesc">Degradation: -3.0% (-0.9% / 10k miles)</div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" id="kpiSoHBar" style="width: 97.0%; background: var(--accent-green);"></div>
+        </div>
+      </div>
+
+      <!-- KPI 3: 900V DCFC Stress Ratio -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">350kW DCFC Stress</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiDcfc">14</span>
+          <span class="kpi-unit">% DCFC</span>
+        </div>
+        <div class="kpi-desc" id="kpiDcfcDesc">86% Level 2 Home AC (Optimal Pack Longevity)</div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" id="kpiDcfcBar" style="width: 14%; background: var(--accent-cyan);"></div>
+        </div>
+      </div>
+
+      <!-- KPI 4: Vampire Drain Sentinel -->
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">Phantom Loss</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiVampire">0.42</span>
+          <span class="kpi-unit">kWh/day</span>
+        </div>
+        <div class="kpi-desc" id="kpiVampireDesc">~1.8 miles / 24h parked (Sleep state efficient)</div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" id="kpiVampireBar" style="width: 18%; background: var(--accent-purple);"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('fleet')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+        Fleet Degradation Benchmark
+      </button>
+      <button class="tab-btn" onclick="switchTab('stress')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        900V DCFC & Thermal Stress
+      </button>
+      <button class="tab-btn" onclick="switchTab('vampire')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        Vampire Drain Sentinel
+      </button>
+      <button class="tab-btn" onclick="switchTab('passport')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Battery Health Passport
+      </button>
+    </nav>
+
+    <!-- Tab 1: Fleet Benchmark Scatter -->
+    <div id="tab-fleet" class="tab-panel active">
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-title-row">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+              Fleet Degradation Scatter Matrix (kWh vs. Odometer)
+            </div>
+            <div class="filter-group">
+              <button class="filter-btn active" onclick="filterFleet('all', this)">All Trims</button>
+              <button class="filter-btn" onclick="filterFleet('gt', this)">Grand Touring</button>
+              <button class="filter-btn" onclick="filterFleet('dream', this)">Dream</button>
+              <button class="filter-btn" onclick="filterFleet('touring', this)">Touring / Pure</button>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <canvas id="fleetScatterCanvas"></canvas>
+          </div>
+
+          <div class="chart-stats-row">
+            <div class="chart-stat-box">
+              <div class="chart-stat-label">Fleet Percentile</div>
+              <div class="chart-stat-value" style="color: var(--accent-green);" id="fleetPercentileText">Top 8.4%</div>
+            </div>
+            <div class="chart-stat-box">
+              <div class="chart-stat-label">Degradation Rate</div>
+              <div class="chart-stat-value" id="fleetDegRateText">-0.91% / 10k mi</div>
+            </div>
+            <div class="chart-stat-box">
+              <div class="chart-stat-label">Fleet Avg @ 20k mi</div>
+              <div class="chart-stat-value" id="fleetAvgCapText">106.8 kWh</div>
+            </div>
+            <div class="chart-stat-box">
+              <div class="chart-stat-label">Your Air GT Delta</div>
+              <div class="chart-stat-value" style="color: var(--accent-gold);" id="fleetDeltaText">+4.8 kWh (+4.5%)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side Intelligence Box -->
+        <div>
+          <div class="card">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+              Degradation Prognosis
+            </div>
+            <div style="margin-top: 16px;">
+              <div class="metric-row">
+                <span class="metric-row-label">Projected @ 50,000 mi</span>
+                <span class="metric-row-value" id="proj50k">108.2 kWh (94.1%)</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-row-label">Projected @ 100,000 mi</span>
+                <span class="metric-row-value" id="proj100k">103.5 kWh (90.0%)</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-row-label">Projected @ 150,000 mi</span>
+                <span class="metric-row-value" id="proj150k">99.1 kWh (86.2%)</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-row-label">Lucid Warranty Limit</span>
+                <span class="metric-row-value" style="color: var(--accent-red);">80.5 kWh (70.0%)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Pack Chemistry Analysis
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-top: 12px; line-height: 1.6;">
+              Your Lucid Air Grand Touring utilizes LG Chem / Samsung SDI 21700 high-nickel cylindrical cells with proprietary micro-channel thermal cooling.
+            </p>
+            <div style="margin-top: 14px; padding: 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-sm); font-size: 12px; color: #a7f3d0;">
+              ✨ <strong>Superior Longevity:</strong> Low DCFC frequency has prevented localized thermal impedance spikes, placing this pack in the top decile.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: 900V DCFC & Thermal Stress -->
+    <div id="tab-stress" class="tab-panel">
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-title-row">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              900V Wunderbox Fast-Charge Power Curves & Cycles
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="stressChartCanvas"></canvas>
+          </div>
+          <div class="chart-stats-row">
+            <div class="chart-stat-box">
+              <div class="chart-stat-label">Total Energy Delivered</div>
+              <div class="chart-stat-value" id="totalChargedKwh">6,840 kWh</div>
+            </div>
+            <div class="chart-stat-box">
+              <div class="chart-stat-label">Peak DCFC Rate Logged</div>
+              <div class="chart-stat-value" style="color: var(--accent-gold);" id="peakDcfcRate">304 kW</div>
+            </div>
+            <div class="chart-stat-box">
+              <div class="chart-stat-label">Avg Pack Temp During DCFC</div>
+              <div class="chart-stat-value" id="avgDcfcTemp">38.4°C (Safe)</div>
+            </div>
+            <div class="chart-stat-box">
+              <div class="chart-stat-label">Charge Longevity Score</div>
+              <div class="chart-stat-value" style="color: var(--accent-green);">94 / 100</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              Charging Health Recommendations
+            </div>
+            <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+              <div style="padding: 12px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent-gold); border-radius: 4px;">
+                <strong style="color: #fff;">Daily Limit: 80% SoC</strong>
+                <p style="color: var(--text-secondary); margin-top: 2px;">Preserves anode stability and minimizes high-state voltage stress.</p>
+              </div>
+              <div style="padding: 12px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent-cyan); border-radius: 4px;">
+                <strong style="color: #fff;">Battery Pre-conditioning Active</strong>
+                <p style="color: var(--text-secondary); margin-top: 2px;">Ensure navigation to 350kW DC chargers is programmed 20+ mins prior for optimal temperature conditioning.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Vampire Drain Sentinel -->
+    <div id="tab-vampire" class="tab-panel">
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            7-Day Parked Energy Consumption & Sleep Monitor
+          </div>
+          <div class="chart-container" style="margin-top: 16px;">
+            <canvas id="vampireChartCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Sleep Architecture Sentinel</div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-top: 12px; line-height: 1.6;">
+            LucidPulse utilizes a <strong>Zero-Wake API Polling Policy</strong>. The app listens to cloud cache updates and avoids triggering vehicle TCU awake states.
+          </p>
+          <div style="margin-top: 18px;">
+            <div class="metric-row">
+              <span class="metric-row-label">Vehicle Sleep State</span>
+              <span class="metric-row-value" style="color: var(--accent-green);">Deep Sleep (0.0W HV)</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-row-label">12V Auxiliary Health</span>
+              <span class="metric-row-value">13.8V (Normal)</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-row-label">Est. Parked Cost / Mo</span>
+              <span class="metric-row-value">$1.84 / mo (@ $0.15/kWh)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Battery Health Passport -->
+    <div id="tab-passport" class="tab-panel">
+      <div class="passport-card">
+        <div class="passport-watermark">LUCID AIR GT</div>
+        
+        <div class="passport-header">
+          <div>
+            <div class="passport-title">LUCID MOTORS BATTERY HEALTH PASSPORT</div>
+            <div class="passport-sub">Certified Independent Telemetry & Degradation Audit</div>
+          </div>
+          <div class="passport-seal">
+            <span class="seal-grade">A+</span>
+            <span class="seal-text">VERIFIED</span>
+          </div>
+        </div>
+
+        <div class="passport-grid">
+          <div class="passport-box">
+            <div class="passport-box-label">Vehicle Model & Trim</div>
+            <div class="passport-box-val" id="passTrim">Lucid Air GT</div>
+          </div>
+          <div class="passport-box">
+            <div class="passport-box-label">Current Odometer</div>
+            <div class="passport-box-val" id="passOdo">18,450 mi</div>
+          </div>
+          <div class="passport-box">
+            <div class="passport-box-label">State of Health (SoH)</div>
+            <div class="passport-box-val" style="color: var(--accent-green);" id="passSoH">97.0%</div>
+          </div>
+          <div class="passport-box">
+            <div class="passport-box-label">Tested Usable Capacity</div>
+            <div class="passport-box-val" style="color: var(--accent-gold);" id="passCap">111.6 kWh</div>
+          </div>
+          <div class="passport-box">
+            <div class="passport-box-label">Fleet Percentile Rank</div>
+            <div class="passport-box-val" style="color: var(--accent-cyan);" id="passRank">Top 8.4%</div>
+          </div>
+          <div class="passport-box">
+            <div class="passport-box-label">Resale Value Premium</div>
+            <div class="passport-box-val" style="color: var(--accent-green);">+$2,400 est.</div>
+          </div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px; font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+          <strong>Auditor's Assessment:</strong> Vehicle demonstrates exceptional battery cell retention. Low DC Fast-Charging cycle exposure (14%) has preserved electrolyte and cathode integrity well above the 50th percentile of equivalent mileage vehicles. Pack remains under 8-Year / 100,000-Mile Factory Lucid Warranty with >27% safety headroom remaining.
+        </div>
+
+        <div class="passport-footer">
+          <span>Audit Timestamp: 2026-09-28 | Cryptographic Hash: 8f9b...a104e7</span>
+          <button class="btn-luxury" onclick="window.print()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Export / Print Passport
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Connect Modal -->
+  <div id="connectModal" class="modal-overlay">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="color: #fff; font-size: 18px; font-weight: 700;">Connect Lucid Motors Account</h3>
+        <button onclick="closeConnectModal()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px;">&times;</button>
+      </div>
+      
+      <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.5;">
+        LucidPulse communicates directly with the Lucid cloud telematics gateway. Your credentials are used solely to obtain an OAuth session token and are never stored on any server.
+      </p>
+
+      <form id="lucidAuthForm" onsubmit="handleAuthSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Lucid Account Email</label>
+          <input type="email" id="authEmail" class="form-input" placeholder="alex.mohit@icloud.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Lucid Account Password</label>
+          <input type="password" id="authPassword" class="form-input" placeholder="••••••••••••" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Region</label>
+          <select id="authRegion" class="form-select">
+            <option value="us-east-1" selected>United States (us-east-1)</option>
+            <option value="eu-central-1">Europe (eu-central-1)</option>
+            <option value="me-central-1">Middle East (me-central-1)</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 24px;">
+          <button type="submit" class="btn-luxury" style="flex: 1; justify-content: center;" id="btnAuthSubmit">
+            Connect to Vehicle
+          </button>
+          <button type="button" class="btn-secondary" onclick="useDemoAirGT()">
+            Load Air GT Profile
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
