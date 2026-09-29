@@ -1,13 +1,13 @@
 {
   "account_email": "alex.mohit@icloud.com",
-  "vin": "Unknown",
+  "vin": "50EA1GBA7NA004348",
   "nickname": "Lucid Air",
   "vehicle_spec": {
-    "vin": "Unknown",
+    "vin": "50EA1GBA7NA004348",
     "nickname": "Lucid Air",
     "model": "Air",
     "trim": "Grand Touring",
-    "software_version": "Lucid UX 2.4.6"
+    "software_version": "Lucid UX 2.10.0"
   },
   "telemetry": {
     "battery": {
